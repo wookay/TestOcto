@@ -1,0 +1,12 @@
+services:
+ - mysql
+
+os:
+  - linux
+
+before_install:
+  # MySQL
+  - mysql --version
+  - mysql -e 'show variables like "socket";' -uroot
+  - mysql -e 'CREATE DATABASE mysqltest;' -uroot
+  - mysql -e 'GRANT ALL PRIVILEGES ON mysqltest.* TO "root"@"localhost" IDENTIFIED BY ""' -uroot
