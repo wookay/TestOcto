@@ -16,7 +16,7 @@ environment:
       - {PYVER: "36", PYTHON_ARCH: "64"}
 
     OPENSSL_VERSION: "1_0_2n"
-    POSTGRES_VERSION: "9_5_12"
+    POSTGRES_VERSION: "REL9_5_12"
 
     PSYCOPG2_TESTDB: psycopg2_test
     PSYCOPG2_TESTDB_USER: postgres
@@ -158,8 +158,8 @@ install:
 
     # Download PostgreSQL source
     - CD C:\Others
-    - IF NOT EXIST postgres-REL_%POSTGRES_VERSION%.zip (
-        curl -fsSL -o postgres-REL_%POSTGRES_VERSION%.zip https://github.com/postgres/postgres/archive/REL%POSTGRES_VERSION%.zip
+    - IF NOT EXIST postgres-%POSTGRES_VERSION%.zip (
+        curl -fsSL -o postgres-%POSTGRES_VERSION%.zip https://github.com/postgres/postgres/archive/%POSTGRES_VERSION%.zip
       )
 
     # Setup build config file (config.pl)
@@ -170,11 +170,11 @@ install:
     # Prepare local include directory for building from
     # Build pg_config in place
     # NOTE: Cannot set and use the same variable inside an IF
-    - SET PGBUILD=%BUILD_DIR%\postgres-REL_%POSTGRES_VERSION%
+    - SET PGBUILD=%BUILD_DIR%\postgres-%POSTGRES_VERSION%
     - IF NOT EXIST %PGTOP%\lib\libpq.lib (
         CD %BUILD_DIR% &&
-        7z x C:\Others\postgres-REL_%POSTGRES_VERSION%.zip &&
-        CD postgres-REL_%POSTGRES_VERSION%\src\tools\msvc &&
+        7z x C:\Others\postgres-%POSTGRES_VERSION%.zip &&
+        CD postgres-%POSTGRES_VERSION%\src\tools\msvc &&
         ECHO $config-^>{ldap} = 0; > config.pl &&
         ECHO $config-^>{openssl} = "%OPENSSLTOP:\=\\%"; >> config.pl &&
         ECHO.>> config.pl &&
