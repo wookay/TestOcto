@@ -84,11 +84,11 @@ init:
     # Change PostgreSQL config before service starts to allow > 1 prepared
     #   transactions for test cases
     - ECHO max_prepared_transactions = 10 >> "C:\\Program Files\\PostgreSQL\\9.6\\data\\postgresql.conf"
-    - ps: (new-object net.webclient).DownloadFile($env:JULIA_URL, "C:\projects\julia-binary.exe")
 
-before_install:
-  # Run installer silently, output to C:\projects\julia
+    # julia
+    - ps: (new-object net.webclient).DownloadFile($env:JULIA_URL, "C:\projects\julia-binary.exe")
     - C:\projects\julia-binary.exe /S /D=C:\projects\julia
+
 
 # Repository gets cloned, Cache is restored
 install:
