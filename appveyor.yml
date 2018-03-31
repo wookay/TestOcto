@@ -20,12 +20,13 @@ environment:
 #      - {PYVER: "35", PYTHON_ARCH: "32"}
 #      - {PYVER: "35", PYTHON_ARCH: "64"}
 #      - {PYVER: "36", PYTHON_ARCH: "32"}
-      - {PYVER: "36", PYTHON_ARCH: "64"}
+#      - - {PYVER: "36", PYTHON_ARCH: "64"}
+      - JULIA_URL: "https://julialangnightlies-s3.julialang.org/bin/winnt/x64/julia-latest-win64.exe"
 
     OPENSSL_VERSION: "1_0_2n"
-    POSTGRES_VERSION: "10_1"
+    POSTGRES_VERSION: "9_6"
 
-    PSYCOPG2_TESTDB: psycopg2_test
+    PSYCOPG2_TESTDB: postgresqltest
     PSYCOPG2_TESTDB_USER: postgres
     PSYCOPG2_TESTDB_PASSWORD: Password12!
     PSYCOPG2_TESTDB_HOST: localhost
@@ -215,33 +216,52 @@ install:
         CD %BASE_DIR% &&
         RMDIR /S /Q %PGBUILD%
       )
-
-build: off
-
-#before_build:
+  - ps: "[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12"
+# If there's a newer build queued for the same PR, cancel this one
+  - ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER -and $env:APPVEYOR_BUILD_NUMBER -ne ((Invoke-RestMethod `
+        https://ci.appveyor.com/api/projects/$env:APPVEYOR_ACCOUNT_NAME/$env:APPVEYOR_PROJECT_SLUG/history?recordsNumber=50).builds | `
+        Where-Object pullRequestId -eq $env:APPVEYOR_PULL_REQUEST_NUMBER)[0].buildNumber) { `
+        throw "There are newer queued builds for this pull request, failing early." }
+# Download most recent Julia Windows binary
+  - ps: (new-object net.webclient).DownloadFile(
+        $env:JULIA_URL,
+        "C:\projects\julia-binary.exe")
+# Run installer silently, output to C:\projects\julia
+  - C:\projects\julia-binary.exe /S /D=C:\projects\julia
 
 build_script:
-    # Add PostgreSQL binaries to the path
-    - PATH=C:\Program Files\PostgreSQL\9.6\bin\;%PATH%
-    - CD C:\Project
-    - "%PYTHON%\\python.exe setup.py build_ext --have-ssl --pg-config %PGTOP%\\bin\\pg_config.exe -l libpgcommon -l libpgport -L %OPENSSLTOP%\\lib -I %OPENSSLTOP%\\include"
-    - "%PYTHON%\\python.exe setup.py build"
-    - "%PYTHON%\\python.exe setup.py install"
-    - RD /S /Q psycopg2.egg-info
-
-#after_build:
+   # Add PostgreSQL binaries to the path
+   - PATH=C:\Program Files\PostgreSQL\9.6\bin\;%PATH%
+# Need to convert from shallow to complete for Pkg.clone to work
+  - IF EXIST .git\shallow (git fetch --unshallow)
+  - C:\projects\julia\bin\julia --color=yes -e "using InteractiveUtils; versioninfo()"
+  - C:\projects\julia\bin\julia --color=yes -e "using Pkg; f(x) = (Pkg.add(x); Pkg.checkout(x, \"master\")); [f(x) for x in reverse([\"LibPQ\", \"WinRPM\", \"Libz\", \"LibExpat\", \"DecFP\", \"CodecZlib\", \"LightXML\", \"TimeZones\", \"BinDeps\"])]"
+  - C:\projects\julia\bin\julia --color=yes -e "using Pkg; Pkg.clone(\"https://github.com/wookay/Octo.jl.git\"); Pkg.build(\"Octo\")"
 
 before_test:
     # Create and setup PostgreSQL database for the tests
     - createdb %PSYCOPG2_TESTDB%
-    - psql -d %PSYCOPG2_TESTDB% -c "CREATE EXTENSION HSTORE;"
+#    - psql -d %PSYCOPG2_TESTDB% -c "CREATE EXTENSION HSTORE;"
 
 test_script:
-    # Print psycopg and libpq versions
-    - "%PYTHON%\\python.exe -c \"import psycopg2; print(psycopg2.__version__)\""
-    - "%PYTHON%\\python.exe -c \"import psycopg2; print(psycopg2.__libpq_version__)\""
-    - "%PYTHON%\\python.exe -c \"import psycopg2; print(psycopg2.extensions.libpq_version())\""
-    - "%PYTHON%\\python.exe -c \"import tests; tests.unittest.main(defaultTest='tests.test_suite')\" --verbose"
+  - C:\projects\julia\bin\julia --color=yes -e "using Pkg; Pkg.test(\"Octo\")"
+
+#build: off
+
+#before_build:
+#
+#build_script:
+#
+
+#after_build:
+
+
+#test_script:
+#    # Print psycopg and libpq versions
+#    - "%PYTHON%\\python.exe -c \"import psycopg2; print(psycopg2.__version__)\""
+#    - "%PYTHON%\\python.exe -c \"import psycopg2; print(psycopg2.__libpq_version__)\""
+#    - "%PYTHON%\\python.exe -c \"import psycopg2; print(psycopg2.extensions.libpq_version())\""
+#    - "%PYTHON%\\python.exe -c \"import tests; tests.unittest.main(defaultTest='tests.test_suite')\" --verbose"
 
 
 
@@ -249,8 +269,6 @@ test_script:
 
 #environment:
 #  PGPASSWORD: Password12!
-#  matrix:
-#  - JULIA_URL: "https://julialangnightlies-s3.julialang.org/bin/winnt/x64/julia-latest-win64.exe"
 #
 ### uncomment the following lines to allow failures on nightly julia
 ### (tests will run but not make your overall status red)
@@ -274,26 +292,3 @@ test_script:
 #    on_build_failure: false
 #    on_build_status_changed: false
 #
-#install:
-#  - ps: "[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12"
-## If there's a newer build queued for the same PR, cancel this one
-#  - ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER -and $env:APPVEYOR_BUILD_NUMBER -ne ((Invoke-RestMethod `
-#        https://ci.appveyor.com/api/projects/$env:APPVEYOR_ACCOUNT_NAME/$env:APPVEYOR_PROJECT_SLUG/history?recordsNumber=50).builds | `
-#        Where-Object pullRequestId -eq $env:APPVEYOR_PULL_REQUEST_NUMBER)[0].buildNumber) { `
-#        throw "There are newer queued builds for this pull request, failing early." }
-## Download most recent Julia Windows binary
-#  - ps: (new-object net.webclient).DownloadFile(
-#        $env:JULIA_URL,
-#        "C:\projects\julia-binary.exe")
-## Run installer silently, output to C:\projects\julia
-#  - C:\projects\julia-binary.exe /S /D=C:\projects\julia
-#
-#build_script:
-## Need to convert from shallow to complete for Pkg.clone to work
-#  - IF EXIST .git\shallow (git fetch --unshallow)
-#  - C:\projects\julia\bin\julia --color=yes -e "using InteractiveUtils; versioninfo()"
-#  - C:\projects\julia\bin\julia --color=yes -e "using Pkg; f(x) = (Pkg.add(x); Pkg.checkout(x, \"master\")); [f(x) for x in reverse([\"LibPQ\", \"WinRPM\", \"Libz\", \"LibExpat\", \"DecFP\", \"CodecZlib\", \"LightXML\", \"TimeZones\", \"BinDeps\"])]"
-#  - C:\projects\julia\bin\julia --color=yes -e "using Pkg; Pkg.clone(\"https://github.com/wookay/Octo.jl.git\"); Pkg.build(\"Octo\")"
-#
-#test_script:
-#  - C:\projects\julia\bin\julia --color=yes -e "using Pkg; Pkg.test(\"Octo\")"
