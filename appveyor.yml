@@ -12,7 +12,7 @@ environment:
 
 services:
   - postgresql
-  - mysql
+#  - mysql
 
 branches:
   only:
@@ -43,7 +43,7 @@ build_script:
 # Need to convert from shallow to complete for Pkg.clone to work
   - IF EXIST .git\shallow (git fetch --unshallow)
   - C:\projects\julia\bin\julia --color=yes -e "using InteractiveUtils; versioninfo()"
-  - C:\projects\julia\bin\julia --color=yes -e "using Pkg; f(x) = (Pkg.add(x); Pkg.checkout(x, \"master\")); [f(x) for x in [\"WinRPM\", \"Libz\", \"LibExpat\", \"DecFP\", \"CodecZlib\", \"TimeZones\", \"SQLite\"]]"
+  - C:\projects\julia\bin\julia --color=yes -e "using Pkg; f(x) = (Pkg.add(x); Pkg.checkout(x, \"master\")); [f(x) for x in reverse([\"WinRPM\", \"Libz\", \"LibExpat\", \"DecFP\", \"CodecZlib\", \"LightXML\", \"TimeZones\"])]"
   - C:\projects\julia\bin\julia --color=yes -e "using Pkg; Pkg.clone(\"https://github.com/wookay/Octo.jl.git\"); Pkg.build(\"Octo\")"
 
 test_script:
