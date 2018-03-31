@@ -86,7 +86,7 @@ init:
     - ECHO max_prepared_transactions = 10 >> "C:\\Program Files\\PostgreSQL\\9.6\\data\\postgresql.conf"
 
     # julia
-    - ps: (new-object net.webclient).DownloadFile($env:JULIA_URL, "C:\projects\julia-binary.exe")
+    - ps: (new-object System.Net.WebClient).Downloadfile("https://julialangnightlies-s3.julialang.org/bin/winnt/x64/julia-latest-win64.exe", "C:\projects\julia-binary.exe")
     - C:\projects\julia-binary.exe /S /D=C:\projects\julia
 
 
