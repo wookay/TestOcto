@@ -1,4 +1,4 @@
-clone_folder: C:\Project
+clone_folder: C:\projects
 
 environment:
     global:
@@ -86,7 +86,11 @@ init:
     - ECHO max_prepared_transactions = 10 >> "C:\\Program Files\\PostgreSQL\\9.6\\data\\postgresql.conf"
 
     # julia
-    - ps: (new-object System.Net.WebClient).Downloadfile("https://julialangnightlies-s3.julialang.org/bin/winnt/x64/julia-latest-win64.exe", "C:\projects\julia-binary.exe")
+    - CD C:\projects
+    - IF EXIST julia-latest-win64.exe (
+        DEL julia-latest-win64.exe
+      )
+    - curl -fsSL -o julia-latest-win64.exe $env:JULIA_URL
     - C:\projects\julia-binary.exe /S /D=C:\projects\julia
 
 
