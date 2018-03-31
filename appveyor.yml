@@ -18,14 +18,15 @@ environment:
     OPENSSL_VERSION: "1_0_2n"
     POSTGRES_VERSION: "REL9_5_12"
 
-    PSYCOPG2_TESTDB: psycopg2_test
-    PSYCOPG2_TESTDB_USER: postgres
-    PSYCOPG2_TESTDB_PASSWORD: Password12!
-    PSYCOPG2_TESTDB_HOST: localhost
-    PSYCOPG2_TESTDB_PORT: 5432
+    OCTO_TESTDB: postgresqltest
+    OCTO_TESTDB_USER: postgres
+    OCTO_TESTDB_PASSWORD: Password12!
+    OCTO_TESTDB_HOST: localhost
+    OCTO_TESTDB_PORT: 5432
 
     PGUSER: postgres
     PGPASSWORD: Password12!
+    JULIA_URL: "https://julialangnightlies-s3.julialang.org/bin/winnt/x64/julia-latest-win64.exe"
 
 matrix:
     fast_finish: false
@@ -197,12 +198,33 @@ install:
         RMDIR /S /Q %PGBUILD%
       )
 
+before_install:
+  - ps: "[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12"
+# If there's a newer build queued for the same PR, cancel this one
+  - ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER -and $env:APPVEYOR_BUILD_NUMBER -ne ((Invoke-RestMethod `
+        https://ci.appveyor.com/api/projects/$env:APPVEYOR_ACCOUNT_NAME/$env:APPVEYOR_PROJECT_SLUG/history?recordsNumber=50).builds | `
+        Where-Object pullRequestId -eq $env:APPVEYOR_PULL_REQUEST_NUMBER)[0].buildNumber) { `
+        throw "There are newer queued builds for this pull request, failing early." }
+# Download most recent Julia Windows binary
+  - ps: (new-object net.webclient).DownloadFile(
+        $env:JULIA_URL,
+        "C:\projects\julia-binary.exe")
+# Run installer silently, output to C:\projects\julia
+  - C:\projects\julia-binary.exe /S /D=C:\projects\julia
+
 build: off
 
 build_script:
     # Add PostgreSQL binaries to the path
     - PATH=C:\Program Files\PostgreSQL\9.6\bin\;%PATH%
+    - IF EXIST .git\shallow (git fetch --unshallow)
+    - C:\projects\julia\bin\julia --color=yes -e "using InteractiveUtils; versioninfo()"
+    - C:\projects\julia\bin\julia --color=yes -e "using Pkg; Pkg.clone(\"https://github.com/wookay/Octo.jl.git\", \"Octo\"); Pkg.build(\"Octo\")"
+    #- C:\projects\julia\bin\julia --color=yes -e "using Pkg; Pkg.clone(pwd(), \"Octo\"); Pkg.build(\"Octo\")"
 
 before_test:
     # Create and setup PostgreSQL database for the tests
-    - createdb %PSYCOPG2_TESTDB%
+    - createdb %OCTO_TESTDB%
+
+test_script:
+  - C:\projects\julia\bin\julia --color=yes -e "using Pkg; Pkg.test(\"Octo\")"
