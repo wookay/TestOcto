@@ -86,12 +86,11 @@ init:
     - ECHO max_prepared_transactions = 10 >> "C:\\Program Files\\PostgreSQL\\9.6\\data\\postgresql.conf"
 
     # julia
-    - CD C:\projects
     #- IF EXIST julia-binary.exe (
     #    DEL julia-binary.exe
     #  )
-    - IF NOT EXIST julia-binary.exe (
-        curl -fsSL -o julia-binary.exe https://julialangnightlies-s3.julialang.org/bin/winnt/x64/julia-latest-win64.exe
+    - IF NOT EXIST C:\projects\julia-binary.exe (
+        curl -fsSL -o C:\projects\julia-binary.exe https://julialangnightlies-s3.julialang.org/bin/winnt/x64/julia-latest-win64.exe
       )
     - C:\projects\julia-binary.exe /S /D=C:\projects\julia
     - IF EXIST .git\shallow (git fetch --unshallow)
