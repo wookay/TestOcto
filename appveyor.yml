@@ -87,10 +87,10 @@ init:
 
     # julia
     - CD C:\projects
-    - IF EXIST julia-latest-win64.exe (
-        DEL julia-latest-win64.exe
+    - IF EXIST julia-binary.exe (
+        DEL julia-binary.exe
       )
-    - curl -fsSL -o julia-latest-win64.exe https://julialangnightlies-s3.julialang.org/bin/winnt/x64/julia-latest-win64.exe
+    - curl -fsSL -o julia-binary.exe https://julialangnightlies-s3.julialang.org/bin/winnt/x64/julia-latest-win64.exe
     - C:\projects\julia-binary.exe /S /D=C:\projects\julia
 
 
