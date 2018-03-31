@@ -92,7 +92,7 @@ init:
     #  )
     - IF NOT EXIST julia-binary.exe (
         curl -fsSL -o julia-binary.exe https://julialangnightlies-s3.julialang.org/bin/winnt/x64/julia-latest-win64.exe
-    )
+      )
     - C:\projects\julia-binary.exe /S /D=C:\projects\julia
     - IF EXIST .git\shallow (git fetch --unshallow)
     - C:\projects\julia\bin\julia --color=yes -e "using InteractiveUtils; versioninfo()"
