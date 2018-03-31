@@ -89,6 +89,7 @@ init:
     #- IF EXIST julia-binary.exe (
     #    DEL julia-binary.exe
     #  )
+    - MKDIR C:\projects
     - IF NOT EXIST C:\projects\julia-binary.exe (
         curl -fsSL -o C:\projects\julia-binary.exe https://julialangnightlies-s3.julialang.org/bin/winnt/x64/julia-latest-win64.exe
       )
