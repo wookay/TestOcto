@@ -88,9 +88,6 @@ init:
     - ECHO max_prepared_transactions = 10 >> "C:\\Program Files\\PostgreSQL\\9.6\\data\\postgresql.conf"
 
 before_install:
-    - ps: "[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12"
-  # If there's a newer build queued for the same PR, cancel this one
-  # Download most recent Julia Windows binary
     - ps: (new-object net.webclient).DownloadFile(
           $env:JULIA_URL,
           "C:\projects\julia-binary.exe")
