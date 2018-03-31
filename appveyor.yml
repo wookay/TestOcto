@@ -1,5 +1,3 @@
-clone_folder: C:\projects
-
 environment:
     global:
         # MSVC Express 2008's setenv.cmd failes if /E:ON and /V:ON are not
