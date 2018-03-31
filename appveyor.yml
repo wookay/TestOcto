@@ -1,6 +1,8 @@
 environment:
     PGUSER: postgres
     PGPASSWORD: Password12!
+    OPENSSL_VERSION: "1_0_2n"
+    POSTGRES_VERSION: "9_6"
 
 matrix:
     fast_finish: false
