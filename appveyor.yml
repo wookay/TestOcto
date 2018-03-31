@@ -212,7 +212,7 @@ install:
 build_script:
     # Add PostgreSQL binaries to the path
     - PATH=C:\Program Files\PostgreSQL\9.6\bin\;%PATH%
-    - C:\projects\julia\bin\julia --color=yes -e "using Pkg; f(x) = (Pkg.add(x); Pkg.checkout(x, \"master\")); [f(x) for x in [\"BinDeps\",\"LibExpat\",\"TimeZones\", \"DecFP\", \"WinRPM\", \"LibPQ\"]]"
+    - C:\projects\julia\bin\julia --color=yes -e "using Pkg; f(x) = (Pkg.add(x); Pkg.checkout(x, \"master\")); [f(x) for x in [\"BinDeps\", \"LibExpat\", \"LightXML\", \"WinRPM\", \"TimeZones\", \"CodecZlib\", \"DecFP\", \"LibPQ\"]]"
     - C:\projects\julia\bin\julia --color=yes -e "using Pkg; Pkg.clone(\"https://github.com/wookay/Octo.jl.git\", \"Octo\"); Pkg.build(\"Octo\")"
     #- C:\projects\julia\bin\julia --color=yes -e "using Pkg; Pkg.clone(pwd(), \"Octo\"); Pkg.build(\"Octo\")"
 
