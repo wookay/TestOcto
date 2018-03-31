@@ -16,7 +16,7 @@ environment:
       - {PYVER: "36", PYTHON_ARCH: "64"}
 
     OPENSSL_VERSION: "1_0_2n"
-    POSTGRES_VERSION: "9_6_STABLE"
+    POSTGRES_VERSION: "9_5_12"
 
     PSYCOPG2_TESTDB: psycopg2_test
     PSYCOPG2_TESTDB_USER: postgres
