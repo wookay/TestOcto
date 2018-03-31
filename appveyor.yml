@@ -159,7 +159,7 @@ install:
     # Download PostgreSQL source
     - CD C:\Others
     - IF NOT EXIST postgres-REL_%POSTGRES_VERSION%.zip (
-        curl -fsSL -o postgres-REL_%POSTGRES_VERSION%.zip https://github.com/postgres/postgres/archive/REL_%POSTGRES_VERSION%.zip
+        curl -fsSL -o postgres-REL_%POSTGRES_VERSION%.zip https://github.com/postgres/postgres/archive/REL%POSTGRES_VERSION%.zip
       )
 
     # Setup build config file (config.pl)
