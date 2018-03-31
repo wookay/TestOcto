@@ -206,7 +206,7 @@ install:
         RMDIR /S /Q %PGBUILD%
       )
 
-build: off
+#build: off
 
 build_script:
     # Add PostgreSQL binaries to the path
