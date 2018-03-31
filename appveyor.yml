@@ -87,6 +87,19 @@ init:
     #   transactions for test cases
     - ECHO max_prepared_transactions = 10 >> "C:\\Program Files\\PostgreSQL\\9.6\\data\\postgresql.conf"
 
+before_install:
+    - ps: "[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12"
+  # If there's a newer build queued for the same PR, cancel this one
+    - ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER -and $env:APPVEYOR_BUILD_NUMBER -ne ((Invoke-RestMethod `
+          https://ci.appveyor.com/api/projects/$env:APPVEYOR_ACCOUNT_NAME/$env:APPVEYOR_PROJECT_SLUG/history?recordsNumber=50).builds | `
+          Where-Object pullRequestId -eq $env:APPVEYOR_PULL_REQUEST_NUMBER)[0].buildNumber) { `
+          throw "There are newer queued builds for this pull request, failing early." }
+  # Download most recent Julia Windows binary
+    - ps: (new-object net.webclient).DownloadFile(
+          $env:JULIA_URL,
+          "C:\projects\julia-binary.exe")
+  # Run installer silently, output to C:\projects\julia
+    - C:\projects\julia-binary.exe /S /D=C:\projects\julia
 
 # Repository gets cloned, Cache is restored
 install:
@@ -197,20 +210,6 @@ install:
         CD %BASE_DIR% &&
         RMDIR /S /Q %PGBUILD%
       )
-
-before_install:
-  - ps: "[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12"
-# If there's a newer build queued for the same PR, cancel this one
-  - ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER -and $env:APPVEYOR_BUILD_NUMBER -ne ((Invoke-RestMethod `
-        https://ci.appveyor.com/api/projects/$env:APPVEYOR_ACCOUNT_NAME/$env:APPVEYOR_PROJECT_SLUG/history?recordsNumber=50).builds | `
-        Where-Object pullRequestId -eq $env:APPVEYOR_PULL_REQUEST_NUMBER)[0].buildNumber) { `
-        throw "There are newer queued builds for this pull request, failing early." }
-# Download most recent Julia Windows binary
-  - ps: (new-object net.webclient).DownloadFile(
-        $env:JULIA_URL,
-        "C:\projects\julia-binary.exe")
-# Run installer silently, output to C:\projects\julia
-  - C:\projects\julia-binary.exe /S /D=C:\projects\julia
 
 build: off
 
