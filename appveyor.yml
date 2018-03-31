@@ -43,6 +43,7 @@ build_script:
 # Need to convert from shallow to complete for Pkg.clone to work
   - IF EXIST .git\shallow (git fetch --unshallow)
   - C:\projects\julia\bin\julia --color=yes -e "using InteractiveUtils; versioninfo()"
+  - C:\projects\julia\bin\julia --color=yes -e "using Pkg; Pkg.add(\"WinRPM\"); Pkg.checkout(\"WinRPM\", \"master\"); Pkg.build(\"DecFP\")"
   - C:\projects\julia\bin\julia --color=yes -e "using Pkg; Pkg.add(\"DecFP\"); Pkg.checkout(\"DecFP\", \"master\"); Pkg.build(\"DecFP\")"
   - C:\projects\julia\bin\julia --color=yes -e "using Pkg; Pkg.clone(\"https://github.com/wookay/Octo.jl.git\"); Pkg.build(\"Octo\")"
 
