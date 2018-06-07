@@ -1,0 +1,48 @@
+## Documentation: http://docs.travis-ci.com/user/languages/julia/
+
+language: julia
+
+julia:
+  - nightly
+
+matrix:
+  include:
+    - os: osx
+  allow_failures:
+    - julia: nightly
+  fast_finish: true
+
+notifications:
+  email: false
+
+git:
+  depth: 99999999
+
+script:
+  - pwd
+  - julia --color=yes -e 'using TestOcto'
+  - cd test
+  - julia --color=yes --depwarn=no runtests.jl
+  - cd ..
+
+after_success:
+  # push coverage results to Codecov
+  - pwd
+  - if [[ "$TRAVIS_OS_NAME" == osx ]]; then mkdir -p ~/.julia/dev/TestOcto ; fi
+  - if [[ "$TRAVIS_OS_NAME" == osx ]]; then mkdir -p ~/.julia/environments/v0.7 ; fi
+  - if [[ "$TRAVIS_OS_NAME" == osx ]]; then cp -r src test REQUIRE Project.toml ~/.julia/dev/TestOcto/ ; fi
+  - if [[ "$TRAVIS_OS_NAME" == osx ]]; then cat ~/.julia/dev/TestOcto/test/runtests.jl ; fi
+  - cd
+  - if [[ "$TRAVIS_OS_NAME" == osx ]]; then julia -e 'using Pkg; Pkg.REPLMode.pkgstr("dev DataStreams")' ; fi
+  - echo -e ""                                                >> manifest
+  - echo -e "[[TestOcto]]"                                    >> manifest
+  - echo -e "deps = [\"Dates\"]"                              >> manifest
+  - echo -e "path = \"$HOME/.julia/dev/TestOcto\""            >> manifest
+  - echo -e "uuid = \"f980e7ac-2ea9-11e8-1f3c-e1d64ddcfff6\"" >> manifest
+  - echo -e "version = \"0.1.0\""                             >> manifest
+  - if [[ "$TRAVIS_OS_NAME" == osx ]]; then cat manifest >> ~/.julia/environments/v0.7/Manifest.toml ; fi
+  - if [[ "$TRAVIS_OS_NAME" == osx ]]; then echo -e "TestOcto = \"f980e7ac-2ea9-11e8-1f3c-e1d64ddcfff6\"" >> ~/.julia/environments/v0.7/Project.toml ; fi
+  - if [[ "$TRAVIS_OS_NAME" == osx ]]; then cat ~/.julia/environments/v0.7/Manifest.toml ; fi
+  - if [[ "$TRAVIS_OS_NAME" == osx ]]; then cat ~/.julia/environments/v0.7/Project.toml ; fi
+  - if [[ "$TRAVIS_OS_NAME" == osx ]]; then julia --color=yes -e 'using Pkg; Pkg.REPLMode.pkgstr("test --coverage TestOcto")' ; fi
+  - if [[ "$TRAVIS_OS_NAME" == osx ]]; then julia --color=yes -e 'using Pkg; Pkg.REPLMode.pkgstr("add Coverage#master"); using Coverage; Codecov.submit(Codecov.process_folder(normpath(Pkg.devdir(), "TestOcto", "src")))' ; fi
