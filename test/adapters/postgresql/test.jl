@@ -1,4 +1,4 @@
-using TestOcto.Adapters.PostgreSQL
+using TestOcto.Octo.Adapters.PostgreSQL
 using Test
 
 @test to_sql([SELECT (TRUE, FALSE)]) == "SELECT TRUE, FALSE"
@@ -6,7 +6,7 @@ using Test
 Repo.debug_sql()
 
 Repo.connect(
-    adapter = Octo.Adapters.PostgreSQL,
+    adapter = TestOcto.Octo.Adapters.PostgreSQL,
     dbname = "postgresqltest",
     user = "postgres",
 )
