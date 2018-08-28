@@ -1,3 +1,4 @@
+using TestOcto
 using TestOcto.Adapters.PostgreSQL
 using Test
 
