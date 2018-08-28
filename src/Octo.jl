@@ -12,8 +12,4 @@ include("Pretty.jl")     # Pretty # Tablize Vector{<:NamedTuple}
 include("Repo.jl")       # Repo
 include("Adapters.jl")
 
-end
-
-module TestOcto
-import ..Octo
-end
+end # module Octo
