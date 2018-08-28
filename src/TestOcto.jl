@@ -15,7 +15,7 @@ include("Adapters.jl")
 end
 
 module TestOcto
-import ..Octo
+import ..Octo.Adapters
 end
 
 #@info :testocto TestOcto.Octo.Adapters.PostgreSQL
