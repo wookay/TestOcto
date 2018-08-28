@@ -7,13 +7,12 @@ services:
 julia:
   - 1.0
   - nightly
+env:
+  - POSTGRESQL_VERSION=9.6 PGHOST="/var/run/postgresql"
 matrix:
-  include:
-  - name: "linux"
-    os: linux
-    env: POSTGRESQL_VERSION=9.6 PGHOST="/var/run/postgresql"
-  - name: "osx"
-    os: osx
+  allow_failures:
+    - julia: nightly
+  fast_finish: true
 before_install:
   - sudo service postgresql stop && sudo service postgresql start $POSTGRESQL_VERSION
   - psql -U postgres -tc 'SHOW server_version'
