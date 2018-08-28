@@ -11,12 +11,12 @@ function backend(adapter::Module) # UnsupportedError
     if isdefined(mod, L)
         getfield(mod, L)
     else
-        try
+       # try
             path = normpath(@__DIR__, "Backends", string(sym, ".jl"))
             Base.include(mod, path)
-        catch err
-            throw(UnsupportedError(string("error on ", adapter)))
-        end
+        #catch err
+       #     throw(UnsupportedError(string("error on ", adapter)))
+        #end
     end
 end
 

@@ -16,7 +16,7 @@ include("Adapters.jl")
 
 end
 
-import .Octo.Adapters
+import .Octo: Repo, Adapters
 
 end
 

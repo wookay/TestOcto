@@ -1,6 +1,6 @@
 module PostgreSQLLoader
 
-using Octo.Repo: ExecuteResult
+using TestOcto.Repo: ExecuteResult
 # https://github.com/invenia/LibPQ.jl
 using LibPQ
 using Memento
