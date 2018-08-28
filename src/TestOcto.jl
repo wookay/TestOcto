@@ -17,3 +17,5 @@ end
 module TestOcto
 import ..Octo
 end
+
+@info :testocto TestOcto.Octo.Adapters.PostgreSQL
