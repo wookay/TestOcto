@@ -1,11 +1,11 @@
 authors = ["WooKyoung Noh <wookay.noh@gmail.com>"]
 name = "TestOcto"
-uuid = "82ded3f4-fb1d-11e8-1a6d-630f35d8befa"
+uuid = "a980e7ac-2ea9-11e8-1f3c-e1d64ddcfff6"
 version = "0.1.1"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
-Octo = "c980e7ac-2ea9-11e8-1f3c-e1d64ddcfff6"
+Octo = "16905944-f982-529b-abb2-b839f98f160b"
 
 [targets]
 test = ["Test", "Octo"]
