@@ -32,13 +32,13 @@ before_script:
   - if [[ "$TRAVIS_OS_NAME" == linux ]]; then psql -U postgres -tc 'SHOW server_version'                                                   ; fi
   - if [[ "$TRAVIS_OS_NAME" == linux ]]; then psql -U postgres -c '\conninfo'                                                              ; fi
 
-  # ODBC
-  - julia -e 'using Pkg; pkg"add ODBC"; pkg"precompile"'
-  - julia -e 'using ODBC; setupdir=normpath(pathof(ODBC), "..", "test", "setup") cp(normpath(setupdir, ".odbcinst.ini"), ENV["HOME"]); run(`odbcinst -i -s -h -f $(normpath(setupdir, "postgresqltest.odbc.ini")`)'
-
   # PostgreSQL
   - psql -c "CREATE DATABASE postgresqltest;" -U postgres
   - psql --version
+
+  # ODBC
+  - julia -e 'using Pkg; pkg"add ODBC"; pkg"precompile"'
+  - julia -e 'using ODBC; setupdir=normpath(pathof(ODBC), "..", "test", "setup") cp(normpath(setupdir, ".odbcinst.ini"), ENV["HOME"]); run(`odbcinst -i -s -h -f $(normpath(setupdir, "postgresqltest.odbc.ini")`)'
 
   # master updates: LegacyStrings v0.4.0 - WARNING: could not import Base.lcfirst into LegacyStrings
   - julia -e 'using Pkg; pkg"add LegacyStrings#master"; pkg"precompile"'
