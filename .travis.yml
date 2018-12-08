@@ -1,25 +1,44 @@
-# Documentation: http://docs.travis-ci.com/user/languages/julia/
-language: julia
-os:
-  - linux
-services:
-  - postgresql
-julia:
-  - 1.0
-  - nightly
-env:
-  - POSTGRESQL_VERSION=9.6 PGHOST="/var/run/postgresql"
-matrix:
-  allow_failures:
-    - julia: nightly
-  fast_finish: true
-before_install:
-  - sudo service postgresql stop && sudo service postgresql start $POSTGRESQL_VERSION
-  - psql -U postgres -tc 'SHOW server_version'
-  - psql -U postgres -c '\conninfo'
-matrix:
-  allow_failures:
-    - julia: nightly
-  fast_finish: true
+## Documentation: http://docs.travis-ci.com/user/languages/julia/
+
 notifications:
   email: false
+
+language: julia
+
+os:
+  - linux
+# - osx # TODO: Got errors on starting postgresql
+
+services:
+  - postgresql
+
+addons:
+  apt:
+    packages:
+      - unixodbc
+      - unixodbc-dev
+      - odbc-postgresql
+
+julia:
+  - 1.0
+
+env:
+  - POSTGRESQL_VERSION=9.6 PGHOST="/var/run/postgresql" ODBC_TEST_DRIVERS="postgresql"
+
+before_script:
+  # linux - PostgreSQL - 9.6.6
+  - if [[ "$TRAVIS_OS_NAME" == linux ]]; then sudo service postgresql stop && sudo service postgresql start $POSTGRESQL_VERSION            ; fi
+  - if [[ "$TRAVIS_OS_NAME" == linux ]]; then psql --version                                                                               ; fi
+  - if [[ "$TRAVIS_OS_NAME" == linux ]]; then psql -U postgres -tc 'SHOW server_version'                                                   ; fi
+  - if [[ "$TRAVIS_OS_NAME" == linux ]]; then psql -U postgres -c '\conninfo'                                                              ; fi
+
+  # ODBC
+  - julia -e 'using Pkg; pkg"add ODBC"; pkg"precompile"'
+  - julia -e 'using ODBC; setupdir=normpath(pathof(ODBC), "..", "test", "setup") cp(normpath(setupdir, ".odbcinst.ini"), ENV["HOME"]); run(`odbcinst -i -s -h -f $(normpath(setupdir, "postgresqltest.odbc.ini")`)'
+
+  # PostgreSQL
+  - psql -c "CREATE DATABASE postgresqltest;" -U postgres
+  - psql --version
+
+  # master updates: LegacyStrings v0.4.0 - WARNING: could not import Base.lcfirst into LegacyStrings
+  - julia -e 'using Pkg; pkg"add LegacyStrings#master"; pkg"precompile"'
