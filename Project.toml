@@ -1,6 +1,6 @@
 authors = ["WooKyoung Noh <wookay.noh@gmail.com>"]
 name = "TestOcto"
-uuid = "f980e7ac-2ea9-11e8-1f3c-e1d64ddcfff6"
+uuid = "82ded3f4-fb1d-11e8-1a6d-630f35d8befa"
 version = "0.1.1"
 
 [extras]
