@@ -38,7 +38,7 @@ before_script:
 
   # ODBC
   - julia -e 'using Pkg; pkg"add ODBC"; pkg"precompile"'
-  - julia -e 'using ODBC; setupdir=normpath(pathof(ODBC), "..", "test", "setup"); run(`odbcinst -i -s -h -f $(normpath(setupdir, "postgresqltest.odbc.ini"))`)'
+  - julia --color=yes -e 'using ODBC; setupdir=normpath(pathof(ODBC), "..", "..", "test", "setup"); run(`odbcinst -i -s -h -f $(normpath(setupdir, "postgresqltest.odbc.ini"))`)'
 
   # master updates: LegacyStrings v0.4.0 - WARNING: could not import Base.lcfirst into LegacyStrings
   - julia -e 'using Pkg; pkg"add LegacyStrings#master"; pkg"precompile"'
