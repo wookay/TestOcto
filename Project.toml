@@ -5,8 +5,7 @@ version = "0.1.1"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
-ODBC = "be6f12e9-ca4f-5eb2-a339-a4f995cc0291"
 Octo = "c980e7ac-2ea9-11e8-1f3c-e1d64ddcfff6"
 
 [targets]
-test = ["Test", "ODBC", "Octo"]
+test = ["Test", "Octo"]
