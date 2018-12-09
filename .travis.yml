@@ -9,8 +9,6 @@ matrix:
       before_install:
         - choco install julia
       script:
-        - julia --color=yes -e 'using Pkg; pkg"dev ."'
-        - julia --color=yes -e 'using Pkg; manifest = normpath(Pkg.depots1(), "environments", "v1.0", "Manifest.toml"); @info(read(manifest, String))'
         - julia --color=yes --project=. -e 'using Pkg; Pkg.test()'
 
 before_script:
