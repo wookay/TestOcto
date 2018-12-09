@@ -15,7 +15,7 @@ matrix:
         directories:
           - C:\Users\travis\AppData\Local\Julia-1.0.2
       before_install:
-        - choco install julia
+          - if [ ! -d "C:\\Users\\travis\\AppData\\Local\\Julia-1.0.2" ]; then    choco install julia    ; fi
       script:
         - julia --color=yes -e 'using Pkg; pkg"dev ."; pkg"test TestOcto"'
 
