@@ -2,12 +2,14 @@
 notifications:
   email: false
 
-language: julia
-
 julia:
   - 1.0
 
 matrix:
+  include:
+    - os: linux
+      language: julia
+
   include:
     - os: windows
       language: sh
