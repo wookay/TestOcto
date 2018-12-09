@@ -11,6 +11,9 @@ matrix:
 
     - os: windows
       language: sh
+      cache:
+        directories:
+          - C:\Users\travis\AppData\Local\Julia-1.0.2
       before_install:
         - choco install julia
       script:
