@@ -10,9 +10,8 @@ matrix:
         - choco install julia
         - julia --color=yes -e 'using InteractiveUtils; versioninfo(verbose=true)'
       script:
-        - julia --color=yes --project=. -e 'using Pkg; pkg"dev https://github.com/JuliaLang/Pkg.jl.git"'
-        - julia --color=yes --project=. -e 'using Pkg; Pkg.test()'
+        - julia --color=yes --project=. -e 'using Pkg; Pkg.resolve(); Pkg.test()'
 
 before_script:
-  - julia --color=yes -e 'using Pkg; pkg"dev https://github.com/wookay/Jive.jl.git"'
+  - julia --color=yes -e 'using Pkg; pkg"add https://github.com/wookay/Jive.jl.git"'
   - julia --color=yes -e 'using Pkg; pkg"precompile"'
