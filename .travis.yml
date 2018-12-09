@@ -13,9 +13,10 @@ matrix:
       language: sh
       cache:
         directories:
-          - C:/Users/travis/AppData/Local/Julia-1.0.2
+          - $HOME/.julia/registries
       before_install:
-          - if [ ! -d "C:/Users/travis/AppData/Local/Julia-1.0.2" ]; then    choco install julia    ; fi
+          - choco install julia
+          - julia --color=yes -e 'using InteractiveUtils; versioninfo(verbose=true)'
       script:
         - julia --color=yes -e 'using Pkg; pkg"dev ."; pkg"test TestOcto"'
 
