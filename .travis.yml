@@ -9,7 +9,9 @@ matrix:
       before_install:
         - choco install julia
       script:
-        - julia --color=yes --project=. -e 'using Pkg; Pkg.test()'
+        - julia --color=yes -e 'using Pkg; pkg"dev ."'
+        - julia --color=yes -e 'using Pkg; ctx = Pkg.Types.Context(); @info(:manifest, read(ctx.env.manifest_file, String)'
+        - julia --color=yes -e 'using Pkg; Pkg.test("TestOcto")'
 
 before_script:
   - julia --color=yes -e 'using Pkg; pkg"add https://github.com/wookay/Jive.jl.git"'
