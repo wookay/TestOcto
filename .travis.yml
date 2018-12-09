@@ -16,7 +16,8 @@ matrix:
           - $HOME/.julia
       before_install:
           - choco install julia
-          - cat /c/ProgramData/chocolatey/logs/chocolatey.log
+          - tail -1000 /c/ProgramData/chocolatey/logs/chocolatey.log
+          - set TERM=xterm-256color
           - julia --color=yes -e 'using InteractiveUtils; versioninfo(verbose=true)'
       script:
         - julia --color=yes -e 'using Pkg; pkg"dev ."; pkg"test TestOcto"'
