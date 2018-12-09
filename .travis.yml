@@ -8,14 +8,8 @@ matrix:
       language: sh
       before_install:
         - choco install julia
-        - julia --color=yes -e 'using Pkg; pkgid = Base.identify_package(Pkg, "Pkg"); @info(:pkgid1, pkgid)'
-        - julia --color=yes -e 'using Pkg; ctx = Pkg.Types.Context(); kv = first(filter(kv -> kv.second=="Pkg", ctx.stdlibs)); spec = PackageSpec(kv.second, kv.first); @info(:spec, spec); Pkg.rm(ctx, [spec]);
-            using UUIDs; pkg = (name="Pkg", uuid=UUID("44cfe95a-1eb2-52ea-b672-e2afdf69b78f")); Pkg.develop(ctx, [PackageSpec(url="https://github.com/JuliaLang/Pkg.jl.git")]); Pkg.resolve(ctx); pkgdir = Base.locate_package(Base.PkgId(spec.uuid, spec.name)); @info(:pkgdir, pkgdir)'
-        - julia --color=yes -e 'using Pkg; pkgid = Base.identify_package(Pkg, "Pkg"); @info(:pkgid2, pkgid)'
-        # - julia --color=yes -e 'using InteractiveUtils; versioninfo(verbose=true)'
       script:
         - julia --color=yes --project=. -e 'using Pkg; Pkg.test()'
 
 before_script:
-  - julia --color=yes -e 'using Pkg; pkg"add https://github.com/wookay/Jive.jl.git"'
-  - julia --color=yes -e 'using Pkg; pkg"precompile"; using Jive; pkgid = Base.identify_package(Jive, "Jive"); @info(:jiveid, pkgid)'
+  - julia --color=yes -e 'using Pkg; Pkg.develop(PackageSpec(url="https://github.com/wookay/Jive.jl.git", version=v"0.1.0"))
