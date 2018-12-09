@@ -12,4 +12,4 @@ matrix:
         - julia --color=yes --project=. -e 'using Pkg; Pkg.test()'
 
 before_script:
-  - julia --color=yes -e 'using Pkg; Pkg.develop(PackageSpec(url="https://github.com/wookay/Jive.jl.git", version=v"0.1.0"))
+  - julia --color=yes -e 'using Pkg; Pkg.develop(PackageSpec(url="https://github.com/wookay/Jive.jl.git", version=v"0.1.0"))'
