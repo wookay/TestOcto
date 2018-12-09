@@ -12,7 +12,7 @@ if Sys.iswindows()
     @test filename == "LLVM.dll"
 else
     (name, ext) = splitext(filename)
-    @test "libLLVM" == name
+    @test startswith(name, "libLLVM")
 end
 
 end # module test_stdlib_libdl
