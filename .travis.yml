@@ -2,6 +2,11 @@
 notifications:
   email: false
 
+language: julia
+
+julia:
+  - 1.0
+
 matrix:
   include:
     - os: windows
@@ -9,8 +14,7 @@ matrix:
       before_install:
         - choco install julia
       script:
-        - julia --color=yes -e 'using Pkg; pkg"dev ."'
-        - julia --color=yes -e 'using Pkg; Pkg.test("TestOcto")'
+        - julia --color=yes -e 'using Pkg; pkg"dev ."; pkg"test TestOcto"'
 
 before_script:
   - julia --color=yes -e 'using Pkg; pkg"add https://github.com/wookay/Jive.jl.git"'
