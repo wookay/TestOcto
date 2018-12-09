@@ -10,6 +10,7 @@ matrix:
         - choco install julia
         - julia --color=yes -e 'using InteractiveUtils; versioninfo(verbose=true)'
       script:
+        - julia --color=yes --project=. -e 'using Pkg; pkg"dev https://github.com/JuliaLang/Pkg.jl.git"'
         - julia --color=yes --project=. -e 'using Pkg; Pkg.test()'
 
 before_script:
