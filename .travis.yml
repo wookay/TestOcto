@@ -1,12 +1,17 @@
-## Documentation: http://docs.travis-ci.com/user/languages/julia/
-
+# Documentation: http://docs.travis-ci.com/user/languages/julia/
 notifications:
   email: false
 
-language: julia
+matrix:
+  include:
+    - os: windows
+      language: sh
+      before_install:
+        - choco install julia
+        - julia --color=yes -e 'using InteractiveUtils; versioninfo(verbose=true)'
+      script:
+        - julia --color=yes --project=. -e 'using Pkg; Pkg.test()'
 
-os:
-  - linux
-
-julia:
-  - 1.0
+before_script:
+  - julia --color=yes -e 'using Pkg; pkg"dev https://github.com/wookay/Jive.jl.git"'
+  - julia --color=yes -e 'using Pkg; pkg"precompile"'

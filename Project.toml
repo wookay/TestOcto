@@ -5,7 +5,7 @@ version = "0.1.1"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
-Octo = "16905944-f982-529b-abb2-b839f98f160b"
+Jive = "6ea17500-d18f-11e8-3cf5-7930f07cb877"
 
 [targets]
-test = ["Test", "Octo"]
+test = ["Test", "Jive"]
