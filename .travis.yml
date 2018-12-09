@@ -16,6 +16,7 @@ matrix:
           - $HOME/.julia/registries
       before_install:
           - choco install julia
+          - choco install ansicon
           - julia --color=yes -e 'using InteractiveUtils; versioninfo(verbose=true)'
       script:
         - julia --color=yes -e 'using Pkg; pkg"dev ."; pkg"test TestOcto"'
