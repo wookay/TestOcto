@@ -3,10 +3,9 @@ name = "TestOcto"
 uuid = "a980e7ac-2ea9-11e8-1f3c-e1d64ddcfff6"
 version = "0.1.1"
 
-[deps]
+[extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 Jive = "6ea17500-d18f-11e8-3cf5-7930f07cb877"
 
-[compat]
-julia = "1.0"
-Jive = "0.1.0"
+[targets]
+test = ["Test", "Jive"]
