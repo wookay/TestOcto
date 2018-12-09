@@ -13,7 +13,7 @@ matrix:
       language: sh
       cache:
         directories:
-          - $HOME/.julia/registries
+          - $HOME/.julia
       before_install:
           - choco install julia
           - choco install ansicon
