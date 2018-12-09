@@ -8,9 +8,10 @@ matrix:
       language: sh
       before_install:
         - choco install julia
-        - julia --color=yes -e 'using InteractiveUtils; versioninfo(verbose=true)'
+        - julia --color=yes -e 'using UUIDs; uuid = UUID("44cfe95a-1eb2-52ea-b672-e2afdf69b78f"); pkgdir = Base.locate_package(Base.PkgId(uuid, "Pkg")); @info(pkgdir)'
+        # - julia --color=yes -e 'using InteractiveUtils; versioninfo(verbose=true)'
       script:
-        - julia --color=yes --project=. -e 'using Pkg; Pkg.resolve(); Pkg.test()'
+        - julia --color=yes --project=. -e 'using Pkg; Pkg.test()'
 
 before_script:
   - julia --color=yes -e 'using Pkg; pkg"add https://github.com/wookay/Jive.jl.git"'
