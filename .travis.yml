@@ -2,15 +2,13 @@
 notifications:
   email: false
 
-julia:
-  - 1.0
-
 matrix:
   include:
     - os: linux
       language: julia
+      julia:
+        - 1.0
 
-  include:
     - os: windows
       language: sh
       before_install:
