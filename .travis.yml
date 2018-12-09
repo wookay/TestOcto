@@ -16,7 +16,7 @@ matrix:
           - $HOME/.julia
       before_install:
           - choco install julia
-          - choco install ansicon
+          - cat /c/ProgramData/chocolatey/logs/chocolatey.log
           - julia --color=yes -e 'using InteractiveUtils; versioninfo(verbose=true)'
       script:
         - julia --color=yes -e 'using Pkg; pkg"dev ."; pkg"test TestOcto"'
