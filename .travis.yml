@@ -28,5 +28,5 @@ before_script:
   - mysql --version
 
 script:
-  - julia -e 'using Pkg; pkg"dev MySQL Octo Jive"'
+  - julia -e 'using Pkg; pkg"dev MySQL SQLite Octo Jive"'
   - cd test && julia runtests.jl
