@@ -30,6 +30,15 @@ struct Employee
 end
 Schema.model(Employee, table_name="Employee", primary_key="ID")
 
+Repo.execute([DROP TABLE IF EXISTS Employee], db=pg_connector)
+Repo.execute(Raw("""
+    CREATE TABLE Employee (
+        ID SERIAL,
+        Name VARCHAR(255),
+        Salary FLOAT(8),
+        PRIMARY KEY (ID)
+    )"""), db=pg_connector)
+
 Repo.query(Employee, db=sqlite_connector)
 Repo.query(Employee, db=pg_connector)
 
