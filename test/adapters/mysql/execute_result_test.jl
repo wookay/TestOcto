@@ -16,7 +16,7 @@ end
 Schema.model(Employee, table_name="Employee", primary_key="ID")
 
 Repo.execute([DROP TABLE IF EXISTS Employee])
-Repo.execute(Raw("""CREATE TABLE IF NOT EXISTS Employee
+result = Repo.execute(Raw("""CREATE TABLE IF NOT EXISTS Employee
                  (
                      ID INT NOT NULL AUTO_INCREMENT,
                      Name VARCHAR(255),
@@ -30,6 +30,7 @@ Repo.execute(Raw("""CREATE TABLE IF NOT EXISTS Employee
                      empno SMALLINT,
                      PRIMARY KEY (ID)
                  );"""))
+@test result === nothing
 
 Repo.execute(Raw("""INSERT INTO Employee (Name, Salary, JoinDate, LastLogin, LunchTime, OfficeNo, JobType, Senior, empno)
                  VALUES
@@ -39,10 +40,18 @@ Repo.execute(Raw("""INSERT INTO Employee (Name, Salary, JoinDate, LastLogin, Lun
               """))
 inserted = Repo.execute_result(INSERT)
 @test inserted.id == 1
+@test inserted.num_affected_rows == 3
 
 changes = (Name="Tim", Salary=15000.50, JoinDate="2015-7-25", LastLogin="2015-10-10 12:12:25", LunchTime="12:30:00", OfficeNo=56, JobType="Accounts", empno=3200)
 inserted = Repo.insert!(Employee, changes)
 @test inserted.id == 4
+@test inserted.num_affected_rows == 1
+
+result = Repo.delete!(Employee, 1:5)
+@test result.num_affected_rows == 4
+
+result = Repo.execute("delete from Employee")
+@test result === nothing
 
 Repo.disconnect()
 
