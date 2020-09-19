@@ -12,15 +12,29 @@ julia:
   - 1.5
 
 services:
+  - postgresql
   - mysql
+
+env:
+  - POSTGRESQL_VERSION=9.6 PGHOST="/var/run/postgresql" ODBC_TEST_DRIVERS="postgresql"
 
 cache:
   directories:
   - $HOME/.julia/artifacts
 
+before_install:
+  - psql --version
+
 before_script:
   # linux - MySQL      - 5.6.33
   - if [[ "$TRAVIS_OS_NAME" == linux ]]; then mysql -e 'show variables like "socket";' -uroot                                              ; fi
+
+  # PostgreSQL
+  - psql --version
+  - psql -U postgres -tc 'SHOW server_version'
+  - psql -U postgres -c '\conninfo'
+  - psql -c "CREATE DATABASE postgresqltest;" -U postgres
+  - psql -c "CREATE DATABASE postgresqltest2;" -U postgres
 
   # MySQL
   - mysql -e 'CREATE DATABASE IF NOT EXISTS mysqltest;' -uroot
