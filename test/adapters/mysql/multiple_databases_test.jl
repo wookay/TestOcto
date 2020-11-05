@@ -16,8 +16,10 @@ myc = Repo.connect(;
 
 pgc = Repo.connect(
     adapter = Octo.Adapters.PostgreSQL,
-    dbname = "postgresqltest2",
+    host = "localhost",
+    dbname = "postgresqltest",
     user = "postgres",
+    password = get(ENV, "PGPASSWORD", ""),
     multiple = true,
 )
 
