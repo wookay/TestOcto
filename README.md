@@ -1,7 +1,7 @@
-|  **Build Status**               |
-|:-------------------------------:|
-|  [![][travis-img]][travis-url]  |
+|  **Build Status**                |
+|:---------------------------------|
+|  [![][actions-img]][actions-url] |
 
 
-[travis-img]: https://api.travis-ci.org/wookay/TestOcto.jl.svg?branch=master
-[travis-url]: https://travis-ci.org/wookay/TestOcto.jl
+[actions-img]: https://github.com/wookay/TestOcto.jl/workflows/CI/badge.svg
+[actions-url]: https://github.com/wookay/TestOcto.jl/actions

@@ -1,0 +1,38 @@
+name: CI
+
+on: [pull_request, push]
+
+jobs:
+  Test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:13
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      - name: Setup PostgreSQL
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          PGPASSWORD: postgres
+        run: |
+             psql --version
+             netstat -nlp | grep 5432
+             psql -U postgres -h localhost -tc 'SHOW server_version'
+             psql -U postgres -h localhost -c '\conninfo'
+             psql -U postgres -h localhost -c "CREATE DATABASE postgresqltest;"
+
+      - uses: actions/checkout@master
+
+      - name: runtests
+        env:
+          PGPASSWORD: postgres
+        run: |
+             julia --project=. -e 'using Pkg; Pkg.test()'

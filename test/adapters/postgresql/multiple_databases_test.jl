@@ -21,8 +21,10 @@ using Octo.Adapters.PostgreSQL # Repo Schema Raw
 
 pg_connector = Repo.connect(
     adapter = Octo.Adapters.PostgreSQL,
-    dbname = "postgresqltest2",
+    host = "localhost",
+    dbname = "postgresqltest",
     user = "postgres",
+    password = get(ENV, "PGPASSWORD", ""),
     multiple = true,
 )
 
