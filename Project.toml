@@ -7,13 +7,15 @@ Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 Jive = "ba5e3d4b-8524-549f-bc71-e76ad9e9deed"
 Octo = "16905944-f982-529b-abb2-b839f98f160b"
 LibPQ = "194296ae-ab2e-5f79-8cd4-7183a0a5a0d1"
+MySQL = "39abe10b-433b-5dbd-92d4-e302a9df00cd"
 SQLite = "0aa819cd-b072-5ff4-a722-6bc24af294d9"
 
 [compat]
 Jive = "0.2"
 Octo = "0.2"
 LibPQ = "1.6"
+MySQL = "1.1"
 SQLite = "1.0"
 
 [targets]
-test = ["Test", "Jive", "Octo", "LibPQ", "SQLite"]
+test = ["Test", "Jive", "Octo", "LibPQ", "MySQL", "SQLite"]

@@ -5,10 +5,9 @@ module Options
 arguments = (
     username = "root",
     password = "",
-    hostname = "localhost",
+    hostname = "127.0.0.1",
     port = 3306,
     db = "mysqltest",
-    unix_socket = Sys.islinux() ? "/var/run/mysqld/mysqld.sock" : "/tmp/mysql.sock",
 )
 
 end # module Options

@@ -51,7 +51,7 @@ result = Repo.delete!(Employee, 1:5)
 @test result.num_affected_rows == 4
 
 result = Repo.execute("delete from Employee")
-@test result === nothing
+@test result.num_affected_rows == 0
 
 Repo.disconnect()
 
