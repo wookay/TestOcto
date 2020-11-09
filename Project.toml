@@ -3,6 +3,7 @@ uuid = "a980e7ac-2ea9-11e8-1f3c-e1d64ddcfff6"
 version = "0.1.1"
 
 [extras]
+Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 Jive = "ba5e3d4b-8524-549f-bc71-e76ad9e9deed"
 Octo = "16905944-f982-529b-abb2-b839f98f160b"
@@ -18,4 +19,4 @@ MySQL = "1.1"
 SQLite = "1.0"
 
 [targets]
-test = ["Test", "Jive", "Octo", "LibPQ", "MySQL", "SQLite"]
+test = ["Dates", "Test", "Jive", "Octo", "LibPQ", "MySQL", "SQLite"]

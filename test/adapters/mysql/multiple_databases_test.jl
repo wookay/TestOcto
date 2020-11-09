@@ -11,16 +11,13 @@ include("options.jl")
 myc = Repo.connect(;
     adapter = Octo.Adapters.MySQL,
     multiple = true,
-    Options.arguments...
+    Options.for_mysql...
 )
 
-pgc = Repo.connect(
+pgc = Repo.connect(;
     adapter = Octo.Adapters.PostgreSQL,
-    host = "localhost",
-    dbname = "postgresqltest",
-    user = "postgres",
-    password = get(ENV, "PGPASSWORD", ""),
     multiple = true,
+    Options.for_postgresql...,
 )
 
 struct Price

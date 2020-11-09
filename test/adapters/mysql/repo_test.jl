@@ -6,9 +6,10 @@ using Octo.Adapters.MySQL # Repo Schema Raw USE
 Repo.debug_sql()
 
 include("options.jl")
+
 Repo.connect(;
     adapter = Octo.Adapters.MySQL,
-    Options.arguments...
+    Options.for_mysql...
 )
 
 struct Employee
@@ -38,7 +39,6 @@ Repo.execute(Raw("""INSERT INTO Employee (Name, Salary, JoinDate, LastLogin, Lun
               """))
 
 df = Repo.query(Employee)
-@info :df df
 @test size(df) == (3,)
 
 df = Repo.get(Employee, 2)
@@ -48,7 +48,7 @@ df = Repo.get(Employee, 2)
 changes = (Name="Tim", Salary=15000.50, JoinDate="2015-7-25", LastLogin="2015-10-10 12:12:25",
            LunchTime="12:30:00", OfficeNo=56, JobType="Accounts", empno=3200)
 result = Repo.insert!(Employee, changes)
-@info :result result
+@test result.num_affected_rows == 1
 
 df = Repo.get(Employee, (Name="Tim",))
 @test size(df) == (1,)
@@ -56,14 +56,13 @@ df = Repo.get(Employee, (Name="Tim",))
 
 changes = (ID=2, Name="Chloe", OfficeNo=56)
 result = Repo.update!(Employee, changes)
-@info :result result
+@test result.num_affected_rows == 1
 
 df = Repo.get(Employee, 2)
-@info :df df
 @test df[1].Name == "Chloe"
 
 result = Repo.delete!(Employee, changes)
-@info :result result
+@test result.num_affected_rows == 1
 
 df = Repo.get(Employee, 2)
 @test size(df) == (0,)

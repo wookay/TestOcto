@@ -6,16 +6,19 @@ using Octo.Adapters.MySQL # Repo Schema Raw USE INSERT
 Repo.debug_sql()
 
 include("options.jl")
+
 Repo.connect(;
     adapter = Octo.Adapters.MySQL,
-    Options.arguments...
+    Options.for_mysql...
 )
 
 struct Employee
 end
 Schema.model(Employee, table_name="Employee", primary_key="ID")
 
-Repo.execute([DROP TABLE IF EXISTS Employee])
+result = Repo.execute([DROP TABLE IF EXISTS Employee])
+@test result === nothing
+
 result = Repo.execute(Raw("""CREATE TABLE IF NOT EXISTS Employee
                  (
                      ID INT NOT NULL AUTO_INCREMENT,
@@ -49,6 +52,9 @@ inserted = Repo.insert!(Employee, changes)
 
 result = Repo.delete!(Employee, 1:5)
 @test result.num_affected_rows == 4
+
+result = Repo.execute("update Employee set Name = 'New Name' where ID > 100")
+@test result.num_affected_rows == 0
 
 result = Repo.execute("delete from Employee")
 @test result.num_affected_rows == 0

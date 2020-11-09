@@ -4,7 +4,12 @@ on: [pull_request, push]
 
 jobs:
   Test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        julia-version: [1.5.2]
+        julia-arch: [x64]
+        os: [ubuntu-latest]
 
     services:
       postgres:
@@ -37,11 +42,9 @@ jobs:
              psql -h localhost -U postgres -tc 'SHOW server_version'
              psql -h localhost -U postgres -c '\conninfo'
              psql -h localhost -U postgres -c "CREATE DATABASE postgresqltest;"
+             psql -h localhost -U postgres -c "CREATE DATABASE postgresqltest2;"
 
       - name: Setup MySQL
-        env:
-          MYSQL_HOST: 127.0.0.1
-          MYSQL_ROOT_PASWORD:
         run: |
              mysql --version
              mysqladmin -h 127.0.0.1 -uroot variables | grep socket
@@ -54,5 +57,7 @@ jobs:
       - name: runtests
         env:
           PGPASSWORD: postgres
+          MYSQL_HOST: 127.0.0.1
+          MYSQL_ROOT_PASWORD:
         run: |
-             julia --project=. -e 'using Pkg; Pkg.test()'
+             julia --project=. -e 'using Pkg; Pkg.test(coverage=false)'

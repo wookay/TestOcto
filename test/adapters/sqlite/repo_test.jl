@@ -13,7 +13,7 @@ chmod(dbfile2, 0o666)
 
 Repo.debug_sql()
 
-repo = Repo.connect(
+Repo.connect(
     adapter = Octo.Adapters.SQLite,
     dbfile = dbfile2
 )
@@ -63,7 +63,7 @@ chmod(dbfile2, 0o666)
 
 Repo.debug_sql()
 
-repo = Repo.connect(
+Repo.connect(
     adapter = Octo.Adapters.SQLite,
     dbfile = dbfile2
 )
@@ -98,7 +98,8 @@ df = Repo.query(Temp)
 
 changes = (AlbumId=0, Title="Test Album", ArtistId=0)
 result = Repo.insert!(Temp, changes)
-@info :result result
+@test result.num_affected_rows == 1
+
 df = Repo.query(Temp)
 @test size(df) == (348,)
 
@@ -110,12 +111,14 @@ df = Repo.get(Temp, (Title="Jagged Little Pill",))
 
 changes = (AlbumId=6, Title="Texas")
 result = Repo.update!(Temp, changes)
-@info :result result
+@test result.num_affected_rows == 1
+
 df = Repo.get(Temp, 6)
 @test df[1].Title == "Texas"
 
 result = Repo.delete!(Temp, changes)
-@info :result result
+@test result.num_affected_rows == 1
+
 df = Repo.get(Temp, 6)
 @test size(df) == (0,)
 

@@ -2,12 +2,19 @@
 
 module Options
 
-arguments = (
+for_mysql = (
+    hostname = get(ENV, "MYSQL_HOST", "localhost"),
     username = "root",
-    password = "",
-    hostname = "127.0.0.1",
+    password = get(ENV, "MYSQL_ROOT_PASWORD", ""),
     port = 3306,
     db = "mysqltest",
+)
+
+for_postgresql = (
+    host = "localhost",
+    dbname = "postgresqltest",
+    user = "postgres",
+    password = get(ENV, "PGPASSWORD", ""),
 )
 
 end # module Options
